@@ -80,4 +80,22 @@ class PostControllerTest extends TestCase
 
         $response->assertStatus(404);
     }
+    /**
+     * Test post creation and then post updating
+     */
+    public function test_update()
+    {
+        $post = Post::factory()->create(); //Se crea un post aleatorio
+
+        $response = $this->json('PUT', "/api/posts/$post->id", [
+            'title' => 'nuevo'
+        ]);//Actualizamos el post creado con el metodo PUT y le damos un nuevo título
+
+        $response->assertJsonStructure(['id', 'title', 'created_at', 'updated_at'])//Comprobamos existencia de id, título, fechas
+                ->assertJson(['title' => 'nuevo'])//que en realidad tenga el nuevo title
+                ->assertStatus(200); //OK
+        
+        $this->assertDatabaseHas('posts', ['title' => 'nuevo']);//Comprobamos existencia en la DB
+
+    }
 }

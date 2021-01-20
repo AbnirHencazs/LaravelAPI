@@ -31,9 +31,9 @@ class PostControllerTest extends TestCase
          * 
          * La tercera comprobación será la respuesta HTTP que esperamos obtener cuando se guarde correctamente
          */
-        $response->assertJsonStructure(['id', 'title', 'created_at', 'udpated_at'])
+        $response->assertJsonStructure(['id', 'title', 'created_at', 'updated_at'])
                 ->assertJson(['title' => 'El post de prueba'])
-                ->asserStatus(200);
+                ->assertStatus(201);
         /**
          * Confirmamos que en efecto existe el dato publicado en la base de datos
          */

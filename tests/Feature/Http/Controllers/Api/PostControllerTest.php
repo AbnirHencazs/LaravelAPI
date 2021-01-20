@@ -67,6 +67,6 @@ class PostControllerTest extends TestCase
          */
         $response->assertJsonStructure(['id', 'title', 'created_at', 'updated_at'])
                 ->assertJson(['title' => $post->title])
-                ->assertStatus(201);
+                ->assertStatus(200);
     }
 }

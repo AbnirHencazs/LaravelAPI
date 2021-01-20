@@ -45,7 +45,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return response()->json($post); //Retornamos un JSON con poblado con el post pasado por parametro
     }
 
     /**

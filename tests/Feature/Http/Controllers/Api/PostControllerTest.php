@@ -40,4 +40,17 @@ class PostControllerTest extends TestCase
         $this->assertDatabaseHas('posts', ['title' => 'El post de prueba']);
 
     }
+
+    public function test_validate_title()
+    {
+        $response = $this->json('POST', '/api/posts', [
+            'title' => ''
+        ]);
+        /**
+         * Estamos intentando guardar un post sin titulo por lo que esperamos el error 422
+         * y comprobar que estamos recibiendo un Json que especifica que el titulo no está incluido
+         */
+        $response->assertStatus(422) //Significa que la solciitud está bien hecha pero fue imposible completarla
+                ->assertJsonValidationErrors('title');
+    }
 }

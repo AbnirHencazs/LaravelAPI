@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    protected $post;
+
+    public function __construct(Post $post)
+    {
+        $this->post = $post;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +32,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = Post::create($request->all());
+        $post = $this->post->create($request->all());
 
         return response()->json($post, 201);
     }

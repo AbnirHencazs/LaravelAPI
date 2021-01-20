@@ -53,4 +53,19 @@ class PostControllerTest extends TestCase
         $response->assertStatus(422) //Significa que la solciitud está bien hecha pero fue imposible completarla
                 ->assertJsonValidationErrors('title');
     }
+
+    public function test_show()
+    {
+        $post = Post::factory()->create();//Utilizaremos el factory para crear un post de prueba
+
+        $response = $this->json('GET', "/api/posts/$post->id");//Intentaremos acceder a dicho post de prueba
+
+        /**
+         * Cuando se acceda al post de prueba quiero verificar que estoy obteniendo el id, titulo y el resto de columnas
+         * y que ademas el titulo debe coincidir con el post que se creo
+         */
+        $response->assertJsonStructure(['id', 'title', 'created_at', 'updated_at'])
+                ->assertJson(['title' => $post->title])
+                ->assertStatus(201);
+    }
 }

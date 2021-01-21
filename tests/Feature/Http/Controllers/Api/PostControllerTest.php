@@ -115,4 +115,22 @@ class PostControllerTest extends TestCase
         $this->assertDatabaseMissing('posts', ['id' => $post->id]);//Comprobamos inexistencia en la DB
 
     }
+
+    /**
+     * Test index feature
+     * 
+     * @return void
+     */
+    public function test_index()
+    {
+        $post = Post::factory(5)->create(); //Se crean 5 posts aleatorio
+
+        $response = $this->json('GET', 'api/posts/');//Accedemos a la ruta donde se sirven los posts creados
+
+        $response->assertJsonStructure([//Verificamos que obtenemos una estructura JSON
+            'data' => [
+                '*' => ['id', 'title', 'created_at', 'updated_at']
+            ]//Dicha estructura debe contener muchos datos (*) con id, title, created_at y updated_at
+        ])->assertStatus(200);
+    }
 }

@@ -15,4 +15,8 @@ use App\Http\Controllers\Api\PostController;
 |
 */
 
-Route::apiResource('posts', PostController::class);
+Route::apiResource('posts', PostController::class)->middleware('auth:api');
+/**
+ * Aplicaremos middleware de autenticación, pero no cualquiera, si no el de auth:api que trabaja con
+ * autenticación mediante token
+ */

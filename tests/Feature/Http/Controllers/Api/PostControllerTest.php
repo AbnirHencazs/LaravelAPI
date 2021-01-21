@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Post;
+use App\Models\User;
 
 class PostControllerTest extends TestCase
 {
@@ -18,9 +19,16 @@ class PostControllerTest extends TestCase
     public function test_store()
     {
         /**
+         * Como el último test modifico el acceso sin credenciales a todas la rutas
+         * debo crear un usuario para poder probar correctamente todas las demas pruebas
+         * y modificar el acceso a la ruta para que el logueo sea mediante token 
+         * pasando el parametro api al metodo actingAs
+         */
+        $user = User::factory()->create();
+        /**
         *Estamos simulando que cualquier aplicación que se conecte a la ruta indicada e intente hacer un POST
         *para guardar los datos dentro del array para comprobar que se guardan correctamente */
-        $response = $this->json('POST', '/api/posts', [
+        $response = $this->actingAs($user, 'api')->json('POST', '/api/posts', [
             'title' => 'El post de prueba'
         ]);
 
@@ -44,7 +52,15 @@ class PostControllerTest extends TestCase
 
     public function test_validate_title()
     {
-        $response = $this->json('POST', '/api/posts', [
+        /**
+         * Como el último test modifico el acceso sin credenciales a todas la rutas
+         * debo crear un usuario para poder probar correctamente todas las demas pruebas
+         * y modificar el acceso a la ruta para que el logueo sea mediante token 
+         * pasando el parametro api al metodo actingAs
+         */
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user, 'api')->json('POST', '/api/posts', [
             'title' => ''
         ]);
         /**
@@ -57,9 +73,17 @@ class PostControllerTest extends TestCase
 
     public function test_show()
     {
+        /**
+         * Como el último test modifico el acceso sin credenciales a todas la rutas
+         * debo crear un usuario para poder probar correctamente todas las demas pruebas
+         * y modificar el acceso a la ruta para que el logueo sea mediante token 
+         * pasando el parametro api al metodo actingAs
+         */
+        $user = User::factory()->create();
+
         $post = Post::factory()->create();//Utilizaremos el factory para crear un post de prueba
 
-        $response = $this->json('GET', "/api/posts/$post->id");//Intentaremos acceder a dicho post de prueba
+        $response = $this->actingAs($user, 'api')->json('GET', "/api/posts/$post->id");//Intentaremos acceder a dicho post de prueba
 
         /**
          * Cuando se acceda al post de prueba quiero verificar que estoy obteniendo el id, titulo y el resto de columnas
@@ -76,7 +100,15 @@ class PostControllerTest extends TestCase
      */
     public function test_404_show()
     {
-        $response = $this->json('GET', "/api/posts/1000");
+        /**
+         * Como el último test modifico el acceso sin credenciales a todas la rutas
+         * debo crear un usuario para poder probar correctamente todas las demas pruebas
+         * y modificar el acceso a la ruta para que el logueo sea mediante token 
+         * pasando el parametro api al metodo actingAs
+         */
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user, 'api')->json('GET', "/api/posts/1000");
 
         $response->assertStatus(404);
     }
@@ -85,9 +117,16 @@ class PostControllerTest extends TestCase
      */
     public function test_update()
     {
+        /**
+         * Como el último test modifico el acceso sin credenciales a todas la rutas
+         * debo crear un usuario para poder probar correctamente todas las demas pruebas
+         * y modificar el acceso a la ruta para que el logueo sea mediante token 
+         * pasando el parametro api al metodo actingAs
+         */
+        $user = User::factory()->create();
         $post = Post::factory()->create(); //Se crea un post aleatorio
 
-        $response = $this->json('PUT', "/api/posts/$post->id", [
+        $response = $this->actingAs($user, 'api')->json('PUT', "/api/posts/$post->id", [
             'title' => 'nuevo'
         ]);//Actualizamos el post creado con el metodo PUT y le damos un nuevo título
 
@@ -105,9 +144,16 @@ class PostControllerTest extends TestCase
      */
     public function test_delete()
     {
+        /**
+         * Como el último test modifico el acceso sin credenciales a todas la rutas
+         * debo crear un usuario para poder probar correctamente todas las demas pruebas
+         * y modificar el acceso a la ruta para que el logueo sea mediante token 
+         * pasando el parametro api al metodo actingAs
+         */
+        $user = User::factory()->create();
         $post = Post::factory()->create(); //Se crea un post aleatorio
 
-        $response = $this->json('DELETE', "/api/posts/$post->id");//borramos post creado
+        $response = $this->actingAs($user, 'api')->json('DELETE', "/api/posts/$post->id");//borramos post creado
 
         $response->assertSee(null)//Que haya inexistencia en la respuesta
                 ->assertStatus(204); //Sin contenido
@@ -123,9 +169,16 @@ class PostControllerTest extends TestCase
      */
     public function test_index()
     {
+        /**
+         * Como el último test modifico el acceso sin credenciales a todas la rutas
+         * debo crear un usuario para poder probar correctamente todas las demas pruebas
+         * y modificar el acceso a la ruta para que el logueo sea mediante token 
+         * pasando el parametro api al metodo actingAs
+         */
+        $user = User::factory()->create();
         $post = Post::factory(5)->create(); //Se crean 5 posts aleatorio
 
-        $response = $this->json('GET', '/api/posts/');//Accedemos a la ruta donde se sirven los posts creados
+        $response = $this->actingAs($user, 'api')->json('GET', '/api/posts/');//Accedemos a la ruta donde se sirven los posts creados
 
         $response->assertJsonStructure([//Verificamos que obtenemos una estructura JSON
             'data' => [

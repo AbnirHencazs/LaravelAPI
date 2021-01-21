@@ -139,5 +139,9 @@ class PostControllerTest extends TestCase
     public function test_guest()
     {
         $this->json('GET', '/api/posts/')->assertStatus(401);//code status 401 = no autorizado
+        $this->json('POST', '/api/posts/')->assertStatus(401);//code status 401 = no autorizado
+        $this->json('GET', '/api/posts/1000')->assertStatus(401);//code status 401 = no autorizado
+        $this->json('PUT', '/api/posts/1000')->assertStatus(401);//code status 401 = no autorizado
+        $this->json('DELETE', '/api/posts/1000')->assertStatus(401);//code status 401 = no autorizado
     }
 }

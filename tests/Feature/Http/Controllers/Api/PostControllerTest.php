@@ -125,12 +125,19 @@ class PostControllerTest extends TestCase
     {
         $post = Post::factory(5)->create(); //Se crean 5 posts aleatorio
 
-        $response = $this->json('GET', 'api/posts/');//Accedemos a la ruta donde se sirven los posts creados
+        $response = $this->json('GET', '/api/posts/');//Accedemos a la ruta donde se sirven los posts creados
 
         $response->assertJsonStructure([//Verificamos que obtenemos una estructura JSON
             'data' => [
                 '*' => ['id', 'title', 'created_at', 'updated_at']
             ]//Dicha estructura debe contener muchos datos (*) con id, title, created_at y updated_at
         ])->assertStatus(200);
+    }
+    /**
+     * Test credentials on a guest
+     */
+    public function test_guest()
+    {
+        $this->json('GET', '/api/posts/')->assertStatus(401);//code status 401 = no autorizado
     }
 }
